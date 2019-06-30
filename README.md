@@ -16,13 +16,17 @@ def deps do
   ]
 end
 ```
+
 Config
+
 ```elixir
 config :onesignal_elixir,
     rest_api_key: "YOUR-ONESIGNAL-REST-API-KEY",
     app_id: "YOUR-ONESIGNAL-APP-ID"
 ```
+
 Usage Examples
+
 ```elixir
 iex(1)> alias OnesignalElixir.{Notification,Builder,Filter}
 [OnesignalElixir.Notification, OnesignalElixir.Builder, OnesignalElixir.Filter]
@@ -42,11 +46,11 @@ iex(3)> body = OnesignalElixir.new() |> Builder.add_content(:en, "Welcome to One
     %{operator: "AND"},
     %{field: "tag", key: "email", relation: "exists"}
   ],
-  headings: %{en: "Hello", es: "Hola"}, 
+  headings: %{en: "Hello", es: "Hola"},
   subtitles: %{en: "Welcome", es: "Bienvenido"}
 }
 iex(4)> OnesignalElixir.send_notification(body)
-{:ok,                                                                                                                 %{                                             
+{:ok,                                                                                                                 %{
   "external_id" => nil,
   "id" => "GENERATED_NOTIFICATION_ID",
   "recipients" => 6
@@ -69,7 +73,42 @@ iex(6)> OnesignalElixir.send_notification(body)
   "id" => "GENERATED_NOTIFICATION_ID",
   "recipients" => 5
 }}
+
+iex(2)> body = OnesignalElixir.new() |> Builder.include_player_ids(["player-id"]) |> Builder.add_heading(:en, "Hello") |> Builder.add_content(:en, "This is the text content")
+%{
+  __struct__: OnesignalElixir.Notification,
+  app_id: "ONE SIGNAL APP ID",
+  contents: %{en: "This is the text content"},
+  headings: %{en: "Hello"},
+  include_player_ids: ["player-id"]
+}
+
+iex(3)> OnesignalElixir.send_notification(body)
+{:ok,
+ %{
+   "external_id" => nil,
+   "id" => "GENERATED_NOTIFICATION_ID",
+   "recipients" => 1
+ }}
+
+iex(4)> body = OnesignalElixir.new() |> Builder.include_external_user_ids(["xxxxx@example.com"]) |> Builder.add_heading(:en, "Hello") |> Builder.add_content(:en, "This is the text content")
+%{
+  __struct__: OnesignalElixir.Notification,
+  app_id: "ONE SIGNAL APP ID",
+  contents: %{en: "This is the text content"},
+  headings: %{en: "Hello"},
+  include_external_user_ids: ["xxxxx@example.com"]
+}
+
+iex(5)> OnesignalElixir.send_notification(body)
+{:ok,
+ %{
+   "external_id" => nil,
+   "id" => "GENERATED_NOTIFICATION_ID",
+   "recipients" => 1
+ }}
 ```
+
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/onesignal_elixir](https://hexdocs.pm/onesignal_elixir).
